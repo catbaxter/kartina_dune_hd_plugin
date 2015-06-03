@@ -112,7 +112,6 @@ class KtvTv extends AbstractTv
     }
 
     ///////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////
 
     public function get_tv_stream_url($playback_url, &$plugin_cookies)
     {
@@ -129,17 +128,25 @@ class KtvTv extends AbstractTv
             $this->session->get_sid_name(),
             $this->session->get_sid(),
             $channel_id);
-		
         if (intval($archive_ts) > 0)
             $url .= "&gmt=$archive_ts";
         if (isset($protect_code) && $protect_code !== '')
             $url .= "&protect_code=$protect_code";
 		$url .= "|||dune_params|||buffering_ms:$buf_time";
-		hd_print("url: --->>>$url");
+		#hd_print("url: --->>>$url");
         return $url;
     }
 
     ///////////////////////////////////////////////////////////////////////
+	public function get_tv_for_rec($channel_id, &$plugin_cookies)
+    {
+		$url = $this->get_tv_playback_url($channel_id, null, null, &$plugin_cookies);
+		$tt = str_replace('http://ts://', 'http://' , $url);
+		$tmp_1 = file_get_contents($tt);
+		$tmp = urldecode(stripslashes($tmp_1));
+		#hd_print ("tmp: --->>>$tmp");
+		return $tmp;
+	}
     ///////////////////////////////////////////////////////////////////////
 
     public function get_day_epg_iterator($channel_id, $day_start_ts, &$plugin_cookies)

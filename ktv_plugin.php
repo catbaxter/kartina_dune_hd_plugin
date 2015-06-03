@@ -3,9 +3,11 @@
 
 require_once 'lib/default_dune_plugin.php';
 require_once 'lib/default_archive.php';
-require_once 'lib/tv/tv_group_list_screen.php';
-require_once 'lib/tv/tv_channel_list_screen.php';
-require_once 'lib/tv/tv_favorites_screen.php';
+require_once 'lib/action_factory.php';
+require_once 'lib/control_factory.php';
+require_once 'lib/dune_exception.php';
+require_once 'lib/utils.php';
+require_once 'lib/abstract_preloaded_regular_screen.php';
 require_once 'lib/vod/vod_list_screen.php';
 require_once 'lib/vod/vod_search_screen.php';
 require_once 'lib/vod/vod_genres_screen.php';
@@ -13,7 +15,12 @@ require_once 'lib/vod/vod_movie_screen.php';
 require_once 'lib/vod/vod_series_list_screen.php';
 require_once 'lib/vod/vod_favorites_screen.php';
 
+require_once 'lib/tv/tv_group_list_screen.php';
+require_once 'lib/tv/tv_favorites_screen.php';
+require_once 'ktv_tv_channel_list_screen.php';
+require_once 'ktv_vod_series_list_screen.php';
 require_once 'ktv_exception.php';
+require_once 'ktv_config.php';
 require_once 'ktv_tv.php';
 require_once 'ktv_vod.php';
 require_once 'ktv_session.php';
@@ -43,8 +50,10 @@ class KtvPlugin extends DefaultDunePlugin
         $this->add_screen(
             new TvGroupListScreen($this->tv, $tv_folder_views));
 
-        $this->add_screen(
-            new TvChannelListScreen($this->tv, $tv_folder_views));
+		$this->add_screen(new KtvTvChannelListScreen($this->tv,
+            KtvConfig::GET_TV_CHANNEL_LIST_FOLDER_VIEWS()));
+        #$this->add_screen(
+        #    new TvChannelListScreen($this->tv, $tv_folder_views));
 
         $this->add_screen(
             new TvFavoritesScreen($this->tv, $tv_folder_views));
@@ -57,7 +66,7 @@ class KtvPlugin extends DefaultDunePlugin
 
         $this->add_screen(new VodMovieScreen($this->vod));
 
-        $this->add_screen(new VodSeriesListScreen($this->vod));
+        $this->add_screen(new KtvVodSeriesListScreen($this->vod));
 
         $this->add_screen(new VodFavoritesScreen($this->vod));
 

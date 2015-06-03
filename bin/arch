@@ -1,0 +1,6 @@
+#!/bin/sh
+echo "Content-type: video/mpeg"
+echo ""
+echo ""
+sleep 1
+/tmp/arch/msdl $QUERY_STRING --quiet -o-

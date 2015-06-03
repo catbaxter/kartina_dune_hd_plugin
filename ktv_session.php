@@ -182,11 +182,11 @@ class KtvSession
         {
             hd_print('General exception: ' . $e->getMessage());
             $title = !$is_playback ? 'Error' :
-                'Failed to connect to Internet.';
+                'Не удалось подключиться к интернету.';
             $text_lines = $is_playback ? array() :
                 array(
-                 'Failed to connect to Internet.',
-                 'Please check Internet connection.'
+                 'Не удалось подключиться к интернету.',
+                 'Пожалуйста, проверьте подключение к интернету.'
                 );
             return new DuneException(
                 $def_caption, -1,
@@ -218,9 +218,9 @@ class KtvSession
         if ($ecode == 3)
         {
             $title = !$is_playback ? 'Error' :
-                'Access denied for 10 minutes.';
+                'Доступ запрещен в течение 10 минут.';
             $text_lines = $is_playback ? array() :
-                array('Access denied for 10 minutes.');
+                array('Доступ запрещен в течение 10 минут.');
             return new DuneException(
                 $def_caption, $ecode,
                 ActionFactory::show_error($fatal, $title, $text_lines));
@@ -229,10 +229,10 @@ class KtvSession
         if ($ecode == 12)
         {
             $title = !$is_playback ? 'Error' :
-                'Access denied. Probably subscription is used elsewhere.';
+                'Доступ запрещен. Наверное подписка используется в другом месте.';
             $text_lines = $is_playback ? array() :
-                array('Access denied.',
-                    'Probably subscription is used elsewhere.');
+                array('Доступ запрещен.',
+                    'Наверное подписка используется в другом месте.');
             return new DuneException(
                 $def_caption, $ecode,
                 ActionFactory::show_error($fatal, $title, $text_lines));
@@ -241,9 +241,9 @@ class KtvSession
         if ($ecode == 11)
         {
             $title = !$is_playback ? 'Error' :
-                'Subscription is used elsewhere.';
+                'Подписка используется в другом месте.';
             $text_lines = $is_playback ? array() :
-                array('Subscription is used elsewhere.');
+                array('Подписка используется в другом месте.');
             return new DuneException(
                 $def_caption, $ecode,
                 ActionFactory::show_error($fatal, $title, $text_lines));
@@ -378,7 +378,7 @@ class KtvSession
 		}
         else if (substr($playback_url, 0, 13) === 'http://mp4://')
             $playback_url = 'http://' . substr($playback_url, 13);
-		//hd_print("playback_url: --->>>$playback_url");
+		hd_print("playback_url: --->>>$playback_url");
 
         try
         {

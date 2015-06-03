@@ -29,13 +29,29 @@ class KtvVod extends AbstractVod
     public function try_load_movie($movie_id, &$plugin_cookies)
     {
         $movie = $this->session->api_vod_info($movie_id);
-
         $this->set_cached_movie($movie);
     }
 
+	///////////////////
+	public function get_vod_pl($series_id, &$plugin_cookies)
+	{
+	$pl_url = sprintf(KTV_VOD_GET_URL_URL, KTV::$SERVER,
+                    $this->session->get_sid_name(),
+					$this->session->get_sid(),
+                    $series_id);
+	$tmp = str_replace('http://mp4://', 'http://', $pl_url);
+	$f = file_get_contents($tmp);
+	$file_rec = urldecode(stripslashes($f));
+	#hd_print("FFFFF------->$file_rec");
+	return $file_rec;
+	}
+	///////////////
+	
     public function get_vod_stream_url($playback_url, &$plugin_cookies)
     {
-        return $this->session->api_get_stream_url($playback_url);
+		$mov = $this->session->api_get_stream_url($playback_url);
+		#hd_print("MOVIE--->>>>$mov");
+		return $mov;
     }
 
     public function get_buffering_ms()

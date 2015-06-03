@@ -1,0 +1,39 @@
+#!/bin/sh
+# Автор: micha86 (https://igores.ru/forum)
+
+function killall_process(){
+killall msdl > /dev/null 2>&1
+}
+function http(){
+
+http="$tmp"
+/tmp/arch/msdl ${http} --quiet -o "$record_file" > /dev/null &
+pid=$!
+echo "kill $pid" > "$record_kill"
+echo "rm -f $record_kill" >> "$record_kill"
+chmod +x "$record_kill"
+}
+
+tmp="$2"
+name="$3"
+record_dir="$4"
+record_file="${record_dir}${name}.ts"
+tmp=`echo "$tmp" | sed "s/%20/ /"`
+record_kill="/tmp/${name}_kartinarec.sh"
+
+case "$5" in
+Yes|yes|Y|y) echo "Paralell Record Enabled" ;;
+No|no|N|n|"") killall_process 
+           echo "Paralell Record Disabled" ;;
+        *) echo echo "$0 Usage: [--protokol] [url] [file_name] [record_dir] [paralell record yes/no]"
+           exit 1
+            ;;
+esac
+case "$1" in
+--http) http ;;
+*) echo "$0 Usage: [--protokol] [url] [file_name] [record_dir] [paralell record yes/no]"
+exit 1 
+;;
+esac
+
+exit 0

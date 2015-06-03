@@ -5,11 +5,11 @@ require_once 'lib/abstract_controls_screen.php';
 
 ///////////////////////////////////////////////////////////////////////////
 
-class VodSearchScreen extends AbstractControlsScreen
+class EpgSearchScreen extends AbstractControlsScreen
 {
-    const ID = 'vod_search';
+    const ID = 'epg_search';
 
-    public static function get_media_url_str()
+    public static function get_media_epg_str()
     {
         return MediaURL::encode(array('screen_id' => self::ID));
     }
@@ -32,14 +32,17 @@ class VodSearchScreen extends AbstractControlsScreen
             $pattern = $plugin_cookies->vod_search_pattern;
 
         $defs = array();
-		ControlFactory::add_vgap($defs, 50);
-        ControlFactory::add_label($defs, "            ", "Введите часть названия фильма или сериала:");
-		$this->add_text_field($defs,
+
+        $this->add_label($defs, null,
+            "Введите часть названия фильма или сериала:");
+
+		 $this->add_text_field($defs,
                 'pattern', "",
                 $pattern, 0, 0, 1,
                 true, 1300, 0, true
         );
-		return $defs;
+		ControlFactory::add_vgap($defs, 500);
+        return $defs;
     }
 
     public function get_control_defs(MediaURL $media_url, &$plugin_cookies)
@@ -71,7 +74,7 @@ class VodSearchScreen extends AbstractControlsScreen
 
                 return ActionFactory::reset_controls($defs,
                     ActionFactory::open_folder(
-                        $this->vod->get_search_media_url_str($pattern),
+                        $this->tv->get_search_epg_str($pattern),
                         $pattern));
             }
         }

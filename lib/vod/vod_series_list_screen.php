@@ -1,10 +1,11 @@
 <?php
 ///////////////////////////////////////////////////////////////////////////
 
-require_once 'lib/vod/vod.php';
+
 require_once 'lib/abstract_preloaded_regular_screen.php';
 
 class VodSeriesListScreen extends AbstractPreloadedRegularScreen
+
 {
     const ID = 'vod_series';
 
@@ -14,17 +15,6 @@ class VodSeriesListScreen extends AbstractPreloadedRegularScreen
             array(
                 'screen_id' => self::ID,
                 'movie_id' => $movie_id));
-    }
-
-    ///////////////////////////////////////////////////////////////////////
-
-    private $vod;
-
-    public function __construct(Vod $vod)
-    {
-        $this->vod = $vod;
-
-        parent::__construct(self::ID, $this->get_folder_views());
     }
 
     ///////////////////////////////////////////////////////////////////////
