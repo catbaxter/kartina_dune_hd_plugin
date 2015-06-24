@@ -6,10 +6,10 @@ killall wget > /dev/null 2>&1
 function http(){
 echo "Start Normal Record" > /D/ktv_rec.log
 http="$tmp"
-echo "ID: $http" >> /D/ktv_rec.log
+echo "ID: $http" > /D/ktv_rec.log
 exec wget ${http} -qO "$record_file" > /dev/null &
 pid=$!
-echo "PID: $pid" >> /D/ktv_rec.log
+echo "PID: $pid" > /D/ktv_rec.log
 echo "kill $pid" > "$record_kill"
 echo "rm -f $record_kill" >> "$record_kill"
 chmod +x "$record_kill"
@@ -21,22 +21,22 @@ id="$tmp"
 user_name=`cat "$conf" | grep "user_name" | awk '{print($3)}'`
 password=`cat "$conf" | grep "password" | awk '{print($3)}'`
 doc="${API}login?login=${user_name}&pass=${password}&settings=all&softid=dune-001"
-echo "$doc" >> /D/ktv_rec.log
+echo "$doc" > /D/ktv_rec.log
 xml=`wget "$doc" -qO - | cat`
 sid=`echo "$xml" | awk -F"[<>]" '{getline;print $5;exit}'`
-echo "SID: $sid" >> /D/ktv_rec.log
+echo "SID: $sid" > /D/ktv_rec.log
 sid_name=`echo "$xml" | awk -F"[<>]" '{getline;print $9;exit}'`
-echo "$sid_name" >> /D/ktv_rec.log
+echo "$sid_name" > /D/ktv_rec.log
 get_url="${API}get_url?${sid_name}=${sid}&cid=${id}"
-echo "URL: $get_url">> /D/ktv_rec.log
+echo "URL: $get_url"> /D/ktv_rec.log
 url=`wget "$get_url" -qO - | cat`
 url=`echo "$url" | awk -F"[<>]" '{getline;print $5;exit}'`
 url=$(printf $(echo -n $url | sed 's/\\/\\\\/g;s/\(%\)\([0-9a-fA-F][0-9a-fA-F]\)/\\x\2/g'))
 url=`echo "$url" | sed "s|\/ts||g" | awk '{print($1)}'`
-echo "REC_URL:$url" >> /D/ktv_rec.log
+echo "REC_URL:$url" > /D/ktv_rec.log
 exec wget ${url} -qO "$record_file" > /dev/null &
 pid=$!
-echo "PID: $pid" >> /D/ktv_rec.log
+echo "PID: $pid" > /D/ktv_rec.log
 echo "kill $pid" > "$record_kill"
 echo "rm -f $record_kill" >> "$record_kill"
 chmod +x "$record_kill"

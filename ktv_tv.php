@@ -5,21 +5,22 @@ require_once 'lib/hashed_array.php';
 require_once 'lib/tv/abstract_tv.php';
 require_once 'lib/tv/default_epg_item.php';
 require_once 'lib/tv/epg_iterator.php';
+require_once 'lib/user_input_handler_registry.php';
 
 require_once 'ktv_channel.php';
 
 ///////////////////////////////////////////////////////////////////////////
 
-class KtvTv extends AbstractTv
+class KtvTv extends AbstractTv implements UserInputHandler
 {
     private $session;
-
+	public function get_handler_id() { return "tv"; }
     ///////////////////////////////////////////////////////////////////////
 
     public function __construct($session)
     {
         $this->session = $session;
-
+		UserInputHandlerRegistry::get_instance()->register_handler($this);
         parent::__construct(
             AbstractTv::MODE_CHANNELS_1_TO_N,
             true,
@@ -104,11 +105,105 @@ class KtvTv extends AbstractTv
             "$num_channels channels ($num_have_archive have archive, ".
             "$num_protected protected)");
     }
+	//////////////////////////////NEW////////////////////////////////////
+	private function get_ktv_dialog_action($n)
+    {
+        $params = array('n' => $n);
+        return UserInputHandlerRegistry::create_action($this,
+            'dialog', $params);
+    }
+	private function get_ktv_reset_controls_action($n)
+    {
+        $params = array('n' => $n);
+        return UserInputHandlerRegistry::create_action($this,
+            'reset_controls', $params);
+    }
+	private function get_set_default_behaviour_action()
+    {
+        return ActionFactory::change_behaviour(
+            array(
+                GUI_EVENT_KEY_DUNE => $this->get_ktv_dialog_action(0),
+            ));
+    }
+	private function get_sample_dialog_defs($n)
+    {
+        $defs = array();
+		ControlFactory::add_label($defs, null,
+            'Сделали: igores и micha86.');
+			ControlFactory::add_label($defs, null,
+            'Сайт: https://igores.ru/forum');
+        ControlFactory::add_label($defs, null,
+            'Подождите '.(10 - $n).' секунд или нажмите RETURN для закрытия...');
+        return $defs;
+    }
 
+    private function get_sample_dialog_action($n)
+    {
+        return ActionFactory::show_dialog("Плагин для Дюны - Картина ТВ",
+            $this->get_sample_dialog_defs($n),
+            false, 0,
+            array(
+                'actions' => array(
+                    GUI_EVENT_TIMER =>
+                        $this->get_ktv_reset_controls_action($n + 1),
+                    GUI_EVENT_KEY_RETURN => ActionFactory::close_dialog_and_run(
+                        $this->get_set_default_behaviour_action()),
+                ),
+                'timer' => ActionFactory::timer(900),
+                'dialog_params' => array('frame_style' => DIALOG_FRAME_STYLE_GLASS)));
+    }
+	
+	public function handle_user_input(&$user_input, &$plugin_cookies)
+    {
+        hd_print('TV entry handler: handle_user_input:');
+        foreach ($user_input as $key => $value)
+            hd_print("  $key => $value");
+
+        
+        if ($user_input->control_id == 'dialog')
+        {
+            return $this->get_sample_dialog_action($user_input->n);
+        }
+
+        if ($user_input->control_id == 'reset_controls')
+        {
+            $close_action = ActionFactory::close_dialog_and_run(
+                $this->get_set_default_behaviour_action());
+
+            if ($user_input->n >= 9)
+                $timer_action = $close_action;
+            else
+            {
+                $timer_action = 
+                    $this->get_ktv_reset_controls_action($user_input->n + 1);
+            }
+
+            return ActionFactory::reset_controls(
+                $this->get_sample_dialog_defs($user_input->n),
+                ActionFactory::change_behaviour(
+                    array(
+                        GUI_EVENT_TIMER => $timer_action,
+                        GUI_EVENT_KEY_RETURN => $close_action,
+                    ),
+                    ActionFactory::timer(900)
+                )
+            );
+        }
+
+        return null;
+    }
+	/////////////////////////////////////////////////////////////////
     public function get_tv_info(MediaURL $media_url, &$plugin_cookies)
     {
         $this->session->ensure_logged_in($plugin_cookies);
-        return parent::get_tv_info($media_url, &$plugin_cookies);
+        $info = parent::get_tv_info($media_url, &$plugin_cookies);
+
+        $info[PluginTvInfo::actions] = array(
+
+            GUI_EVENT_KEY_DUNE => $this->get_ktv_dialog_action(0),
+
+        );
+        return $info;
     }
 
     ///////////////////////////////////////////////////////////////////////

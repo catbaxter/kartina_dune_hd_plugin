@@ -43,7 +43,20 @@ class HD
         $dt = new DateTime('@' . $ts);
         return $dt->format($fmt);
     }
-
+	///////////////////////////////////////////////////////////////////////////
+	public static function get_mount_smb_path($ip_path, $smb_user, $smb_pass, $mount_path)
+    {
+		$tmp = explode('/', $ip_path);
+		$ip_lan = $tmp[0].'/'.$tmp[1];
+		$tmp = explode($ip_lan, $ip_path);
+		$folder_lan = $tmp[1] . '/';
+		if (!file_exists("/tmp/mnt/smb/$mount_path"))
+		shell_exec("mkdir /tmp/mnt/smb/$mount_path");
+		shell_exec("mount -t cifs -o rw,username=$smb_user,password=$smb_pass \"//$ip_lan\" \"/tmp/mnt/smb/$mount_path\"");
+		$mount_path = str_replace('//','/',"/tmp/mnt/smb/$mount_path/$folder_lan");
+		return $mount_path;
+	}
+    
     ///////////////////////////////////////////////////////////////////////
 
     public static function format_duration($msecs)

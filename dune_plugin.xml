@@ -46,4 +46,11 @@
   <params>
      <program>ktv.php</program>
   </params>
+  <version_index>3</version_index>
+  <version>1.0.2</version>
+  <check_update>
+    <schema>1</schema>
+    <url>http://igores.ru/dune/update/ktv/update.txt</url>
+    <timeout>0</timeout>
+  </check_update> 
 </dune_plugin>

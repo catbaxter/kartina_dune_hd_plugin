@@ -53,7 +53,13 @@ const KTV_ARCHIVE_URL_PREFIX = 'http://igores.ru/dune/ktv';
 
 const KTV_ARCHIVE_ID = 'main';
 
-
+	/////////////////////////////////////////////
+	const VERSION_MAJOR                     = '1';
+    const VERSION_MINOR                     = '0';
+    const VERSION_SUBMINOR                  = '2';
+    const VERSION_DATE                      = '12.06.15';
+    const VERSION_TIME                      = '00:00';
+    ///////////////////////////////////////////////////////////////////////
 
 class KtvSession
 {

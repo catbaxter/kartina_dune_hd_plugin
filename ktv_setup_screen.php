@@ -144,6 +144,7 @@ class KtvSetupScreen extends AbstractControlsScreen
 		///////////////////////////////////////////////////////////////////
 		$epg_font_size = isset($plugin_cookies->epg_font_size) ? $plugin_cookies->epg_font_size : self::EPG_FONTSIZE_DEF_VALUE;///igores
 		$buf_time = isset($plugin_cookies->buf_time) ? $plugin_cookies->buf_time : 0;
+		$ver = ('Версия: ' . VERSION_MAJOR . '.' . VERSION_MINOR . '.' . VERSION_SUBMINOR . ' [' . VERSION_DATE . ']');
 		////////////////////////record////////////////////////////////////////////
 		$recdata = isset($plugin_cookies->recdata) ? 
 		$plugin_cookies->recdata : '/D';
@@ -190,7 +191,10 @@ class KtvSetupScreen extends AbstractControlsScreen
                 HD::format_date_time_date($tm) . ', ' .
                 HD::format_date_time_time($tm);
         }
-
+		////////////////////////
+		$this->add_label($defs,
+            'Плагин Kartina TV:', $ver);
+		/////////////////////////
         $this->add_label($defs,
             'Абонемент:', $login_str);
 
@@ -303,21 +307,7 @@ class KtvSetupScreen extends AbstractControlsScreen
                 'Время буфферизации:', $http_caching_caption);
             $this->add_label($defs,
                 'Задержка по времени (часы):', $timeshift_caption);
-        }
-
-        if (isset($plugin_cookies->show_in_main_screen))
-            $show_in_main_screen = $plugin_cookies->show_in_main_screen;
-        else
-            $show_in_main_screen = 'auto';
-
-        $show_ops = array();
-        $show_ops['auto'] = 'Автоматически';
-        $show_ops['yes'] = 'Да';
-        $show_ops['no'] = 'Нет';
-        $this->add_combobox($defs,
-            'show_in_main_screen', 'Показывать в главном меню:',
-            $show_in_main_screen, $show_ops, 0, true);
-			
+        }	
 		$this->add_button
             (
                 $defs,
@@ -338,6 +328,19 @@ class KtvSetupScreen extends AbstractControlsScreen
                 '<== На первую страницу настроек',
                 700
             );
+		////////////////////////////////////////////////////////////////
+			if (isset($plugin_cookies->show_in_main_screen))
+            $show_in_main_screen = $plugin_cookies->show_in_main_screen;
+				else
+					$show_in_main_screen = 'auto';
+
+				$show_ops = array();
+				$show_ops['auto'] = 'Автоматически';
+				$show_ops['yes'] = 'Да';
+				$show_ops['no'] = 'Нет';
+				$this->add_combobox($defs,
+					'show_in_main_screen', 'Показывать в главном меню:',
+            $show_in_main_screen, $show_ops, 0, true);
 		////////////////////////////////////////////////////////////////
 			$epg_font_size_ops = array();
 			$epg_font_size_ops ['normal'] = 'Обычный';

@@ -3,4 +3,4 @@ echo "Content-type: video/mpeg"
 echo ""
 echo ""
 sleep 1
-/tmp/arch_kart/msdl $QUERY_STRING --quiet -o-
+/tmp/arch/msdl $QUERY_STRING --quiet -o-

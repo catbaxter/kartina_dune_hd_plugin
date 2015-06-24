@@ -406,10 +406,10 @@ class KtvTvChannelListScreen extends TvChannelListScreen
 			$streaming_url = 'http://' . $ttt[1];	
 			#hd_print("URL_REC----->$streaming_url");
 			}
-			$ptl = "http";
+			$ptl = "time";
 			$rec_script = '/tmp/arch_kart/rec';
 			CHECK::check_for_arch();
-		        $cmd_rec = "$rec_script --$ptl \"$streaming_url\" \"$rec_name\" \"$rec_path\"";
+		        $cmd_rec = "$rec_script --$ptl \"$channel_id\" \"$rec_name\" \"$rec_path\"";
 			
 			if (!file_exists($rec_path))
 			return ActionFactory::show_title_dialog("Накопитель для записи не найден!!! Подключите к плееру накопитель.");
